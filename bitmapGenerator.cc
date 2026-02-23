@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
+
 using namespace std;
 
 // Estruturas do Windows BMP (necessárias para o formato)
