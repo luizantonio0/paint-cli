@@ -9,6 +9,11 @@
 
 using namespace std;
 
+struct Dimensions {
+    int width;
+    int height;
+};
+
 Color printColors() {
     int option;
     cout << "Colors available:" << endl;
@@ -40,27 +45,76 @@ int printSize()
     return size;
 }
 
+Dimensions printDimensions() {
+    Dimensions dimensions;
+    cout << "Enter canvas width (1-1000): ";
+    cin >> dimensions.width;
+    if (dimensions.width < 1 || dimensions.width > 1000) {
+        cout << "Invalid width. Defaulting to 800." << endl;
+        dimensions.width = 800;
+    }
+    cout << "Enter canvas height (1-1000): ";
+    cin >> dimensions.height;
+    if (dimensions.height < 1 || dimensions.height > 1000) {
+        cout << "Invalid height. Defaulting to 800." << endl;
+        dimensions.height = 800;
+    }
+    return dimensions;
+}
+
+Dimensions printDrawDimensions(int maxWidth, int maxHeight) {
+    Dimensions dimensions;
+    cout << "Enter X coordinate for the draw center (0-" << maxWidth << "): ";
+    cin >> dimensions.width;
+    if (dimensions.width < 0 || dimensions.width > maxWidth) {
+        cout << "Invalid X coordinate. Defaulting to 400." << endl;
+        dimensions.width = 400;
+    }
+    cout << "Enter Y coordinate for the draw center (0-" << maxHeight << "): ";
+    cin >> dimensions.height;
+    if (dimensions.height < 0 || dimensions.height > maxHeight) {
+        cout << "Invalid Y coordinate. Defaulting to 400." << endl;
+        dimensions.height = 400;
+    }
+    return dimensions;
+}
+
 int main() {
     cout << "Paint CLI, started!" << endl;
-    Canva canva = Canva("canva.bmp", 800, 800);
-    IDraw* drawService = new DrawCircle();
+    Dimensions dimensions = printDimensions();
+    Canva canva = Canva("../canva.bmp", dimensions.width, dimensions.height);
+    IDraw* drawService;
 
     while (1){
         int option;
 
         cout << "Choose an option:" << endl;
         cout << "1. Draw a circle" << endl;
-        cout << "2. Exit" << endl;
+        cout << "2. Draw a square" << endl;
+        cout << "3. Exit" << endl;
         cin >> option;
         
 
         switch (option) {
-            case 1:{
+            case 1:
+            {
+                drawService = new DrawCircle();
                 Color color = printColors();
                 int size = printSize();
-                drawService->draw(canva, 400, 400, size, color);
-                break;}
+                Dimensions drawDimensions = printDrawDimensions(dimensions.width, dimensions.height);
+                drawService->draw(canva, drawDimensions.width, drawDimensions.height, size, color);
+                break;
+            }
             case 2:
+            {
+                drawService = new DrawSquare();
+                Color color = printColors();
+                int size = printSize();
+                Dimensions drawDimensions = printDrawDimensions(dimensions.width, dimensions.height);
+                drawService->draw(canva, drawDimensions.width, drawDimensions.height, size, color);
+                break;
+            }
+            case 3:
                 cout << "Exiting Paint CLI." << endl;
                 return 0;
             default:
